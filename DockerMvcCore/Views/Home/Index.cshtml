@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h2>Your Name, COMC1754</h2>
+<h3>Exercise 2B: Docker Container, nanoserver/iis</h3>
+<ul>
+    <li>Install Windows 10 Edu guest in VMware</li>
+    <li>
+        Modify VM settings:
+        <ul>
+            <li>Add to .vmx:<br /> hypervisor.cpuid.v0 = "FALSE"<br /> mce.enable = "TRUE"<br /> vhu.enable = "TRUE"</li>
+            <li>In VMware settings, enable: <br />Virtualize Intel VT-x/EPT or AMD-V/RVI.<br /> Virtualize CPU Performance counters.</li>
+        </ul>
+    </li>
+    <li>Install Hyper-V</li>
+    <li>Install Docker for Windows</li>
+    <li>Switch to Windows containers</li>
+    <li>Pull nanoserver/iis image from hub.docker.com</li>
+    <li>Create &amp; run "nanoiis" container</li>
+    <li>
+        Docker commands:
+        <ul>
+            <li>docker pull nanoserver/iis</li>
+            <li>docker run --name nanoiis -d -it -p 80:80 nanoserver/iis</li>
+            <li>docker images</li>
+            <li>docker ps -a -f status=running</li>
+            <li>docker inspect -f "&#123;&#123; .NetworkSettings.Networks.nat.IPAddress &#125;&#125;" nanoiis</li>
+            <li>docker inspect --format="&#123;&#123;.Id&#125;&#125;" nanoiis</li>
+            <li>Enter-PSSession &lt;type-here-containerid&gt; -RunAsAdministrator</li>
+            <li>exit</li>
+            <li>cd \users\&lt;YourUserName&gt;\documents</li>
+            <li>docker cp index.html nanoiis:/inetpub/wwwroot</li>
+            <li>docker start nanoiis</li>
+            <li>docker attach nanoiis</li>
+        </ul>
+    </li>
+</ul>

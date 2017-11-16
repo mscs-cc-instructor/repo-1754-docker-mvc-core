@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  dockermvccore:
+    image: dockermvccore
+    build:
+      context: ./DockerMvcCore
+      dockerfile: Dockerfile
