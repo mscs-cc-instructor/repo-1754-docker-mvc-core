@@ -3,36 +3,19 @@
 }
 
 <h2>Your Name, COMC1754</h2>
-<h3>Exercise 2B: Docker Container, nanoserver/iis</h3>
-<ul>
-    <li>Install Windows 10 Edu guest in VMware</li>
-    <li>
-        Modify VM settings:
-        <ul>
-            <li>Add to .vmx:<br /> hypervisor.cpuid.v0 = "FALSE"<br /> mce.enable = "TRUE"<br /> vhu.enable = "TRUE"</li>
-            <li>In VMware settings, enable: <br />Virtualize Intel VT-x/EPT or AMD-V/RVI.<br /> Virtualize CPU Performance counters.</li>
-        </ul>
-    </li>
-    <li>Install Hyper-V</li>
-    <li>Install Docker for Windows</li>
-    <li>Switch to Windows containers</li>
-    <li>Pull nanoserver/iis image from hub.docker.com</li>
-    <li>Create &amp; run "nanoiis" container</li>
-    <li>
-        Docker commands:
-        <ul>
-            <li>docker pull nanoserver/iis</li>
-            <li>docker run --name nanoiis -d -it -p 80:80 nanoserver/iis</li>
-            <li>docker images</li>
-            <li>docker ps -a -f status=running</li>
-            <li>docker inspect -f "&#123;&#123; .NetworkSettings.Networks.nat.IPAddress &#125;&#125;" nanoiis</li>
-            <li>docker inspect --format="&#123;&#123;.Id&#125;&#125;" nanoiis</li>
-            <li>Enter-PSSession &lt;type-here-containerid&gt; -RunAsAdministrator</li>
-            <li>exit</li>
-            <li>cd \users\&lt;YourUserName&gt;\documents</li>
-            <li>docker cp index.html nanoiis:/inetpub/wwwroot</li>
-            <li>docker start nanoiis</li>
-            <li>docker attach nanoiis</li>
-        </ul>
-    </li>
-</ul>
+<h3>Exercise 2C: Build Docker Image, ASP.Net Core Application</h3>
+<ol>
+    <li>Install Visual Studio Code in developer VM</li>
+    <li>Install Git:<br />&nbsp;&nbsp;&nbsp; <a href="https://git-scm.com/download">https://git-scm.com/download</a></li>
+    <li>Using "View" menu VS Code open an Integrated Terminal window.</li>
+    <li>In the Terminal window, change to your Documents folder:<br />&nbsp;&nbsp;&nbsp; cd documents</li>
+    <li>Clone the repository from GitHub:<br />&nbsp;&nbsp;&nbsp; <a href="https://github.com/mswanson-mscst/repo-1754-docker-mvc-core.git">https://github.com/mswanson-mscst/repo-1754-docker-mvc-core.git</a></li>
+    <li>Open Views\index.cshtml, add your name, and save the file.</li>
+    <li>Replace the contents of Dockerfile with:<br /><br />FROM microsoft/aspnetcore-<a href="build:2.0">build:2.0</a> AS build-env<br />WORKDIR /app<br /><br /># Copy csproj and restore as distinct layers<br />COPY *.csproj ./<br />RUN dotnet restore<br /><br /># Copy everything else and build<br />COPY . ./<br />RUN dotnet publish -c Release -o out<br /><br /># Build runtime image<br />FROM microsoft/a<a href="spnetcore:2.0">spnetcore:2.0</a><br />WORKDIR /app<br />COPY --from=build-env /app/out .<br />ENTRYPOINT ["dotnet", "<strong>dockermvccore.dll</strong>"]<br /><br /></li>
+    <li>Replace the contents of .dockerignore with:<br /><br />bin\<br />obj\<br /><br /></li>
+    <li>Build the new Docker image (<br />&nbsp;&nbsp;&nbsp; docker build -t dockimg1754mvccore .</li>
+    <li>Create and run the container:<br />&nbsp;&nbsp;&nbsp; docker run -d -p 8080:80 --name doccont1754mvccore dockimg1754mvccore</li>
+    <li>Get IP address of container:<br />&nbsp;&nbsp;&nbsp; docker inspect -f "{{ .NetworkSettings.Networks.nat.IPAddress }}" doccont1754mvccore</li>
+    <li>Open web browser to the indicated IP address. Your web page should be displayed.</li>
+    <li>Open Powershell in container:<br />&nbsp;&nbsp;&nbsp; docker inspect --format="{{.Id}}" doccont1754mvccore<br />&nbsp;&nbsp;&nbsp; Enter-PSSession <strong>&lt;type-here-containerid&gt;</strong> -RunAsAdministrator</li>
+</ol>
